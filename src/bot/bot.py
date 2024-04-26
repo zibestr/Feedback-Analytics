@@ -12,13 +12,14 @@ from aiogram.types.inline_keyboard_markup import InlineKeyboardMarkup
 from aiogram.filters.callback_data import CallbackData
 import getToken
 
-# Включаем логирование, чтобы не пропустить важные сообщения
 logging.basicConfig(level=logging.INFO)
-# Объект бота
 API_TOKEN = getToken.getToken()
 bot = Bot(token=API_TOKEN)
-# Диспетчер
 dp = Dispatcher()
+
+
+textFromDb = ["Курс авгнцапвапцапвцпувапцапавпуцавпуцр 1", "Курс ооуоплрорпораоропорпрваенаунавцавнуц 2", "Курс пувцпавуарпвауцпавншлфавгецнуавуцевц 3", "Курсорноршгрупаркупаеасеуасеаучеуаке 4"]
+
 
 
 class ID(StatesGroup):
@@ -26,6 +27,7 @@ class ID(StatesGroup):
 
 
 class Form(StatesGroup):
+    removeID = State()
     question1 = State()
     question2 = State()
     question3 = State()
@@ -34,12 +36,12 @@ class Form(StatesGroup):
 
 
 
-class MarkCallback(CallbackData, prefix="am"):
+class MarkCallback(CallbackData, prefix="mark"):
     data: int
 
 
-class CourceCallback(CallbackData, prefix="am"):
-    data: str
+class CourceCallback(CallbackData, prefix="cource"):
+    data: int
 
 
 async def setUserIDInDB(message: types.Message, state: FSMContext):
@@ -74,7 +76,7 @@ async def cmd_feedbask(message: types.Message) -> None:
 
 @dp.callback_query(MarkCallback.filter(F.data < 6))
 async def exit(message: Message):
-    await message.answer("Всё понятно, значит пока не готов говорить, крутите его ребята!")
+    await message.answer("Выбери другие оценки, когда захочешь оставить отзыв")
 
 
 @dp.callback_query(MarkCallback.filter(F.data > 5))
@@ -86,19 +88,23 @@ async def contin(call: Message, state: FSMContext):
         reply_markup=None
     )
     builder = InlineKeyboardBuilder()
-    textFromDb = ["Курс 1", "Курс 2", "Курс 3", "Курс 4"]
-    for index in textFromDb:
-        builder.button(text=index, callback_data=CourceCallback(data=index))
-    await call.message.answer("Выберите свой курс", reply_markup=builder.as_markup())
+    for index in range(len(textFromDb)):
+        builder.button(text= textFromDb[index], callback_data=CourceCallback(data=(index+1)))
+    await call.message.answer("Выберите вебинар", reply_markup=builder.as_markup())
     await state.set_state(Form.question1)
 
 
-@dp.callback_query(CourceCallback.filter(F.data != ""))
+@dp.callback_query(CourceCallback.filter(F.data != 0))
 async def Question1(call : CallbackQuery, callback_data: CourceCallback, state: FSMContext) -> None:
-    #print(callback_data.data)
-    await state.update_data(question1=callback_data.data)
     await call.answer()
-    await call.message.answer("Что вам больше всего понравилось в теме вебинара и почему?")
+    remove = await state.get_data()
+    remove = remove["RemoveMessage"] if "RemoveMessage" in remove else None
+    if remove is not None:
+        await bot.edit_message_text(chat_id=call.message.chat.id,message_id=remove, text="Выбран вебинар {} \n Что вам больше всего понравилось в теме вебинара и почему?".format(textFromDb[callback_data.data-1]))
+    else:
+        r = await call.message.answer("Выбран вебинар {} \n  Что вам больше всего понравилось в теме вебинара и почему?".format(textFromDb[callback_data.data-1]))
+        await state.update_data(RemoveMessage=r.message_id)
+    await state.update_data(question1=callback_data.data)
     await state.set_state(Form.question2)
 
 
@@ -123,7 +129,7 @@ async def echo(message: Message,  state: FSMContext) -> None:
         await state.update_data(question4=message.text)
         await state.set_state(Form.question5)
     elif st==Form.question5:
-        await message.answer("Спасибо за отзыв, мы обязательно его учтём")
+        await message.answer("Спасибо за отзыв, мы обязательно его учтём. Если хотите оставить ещё отзыв наберите команду \n /feedback")
         await state.update_data(question5=message.text)
         await putInDb(message, state)
     else:
@@ -132,6 +138,7 @@ async def echo(message: Message,  state: FSMContext) -> None:
 
 async def putInDb(message: Message, state: FSMContext) -> None:
     data = await state.get_data()
+    del data["RemoveMessage"]
     s = ""
     for i in data:
         s+= "{} - {}\n".format(i,data[i])
