@@ -1,10 +1,18 @@
-from flask import Flask
-import os
+from flask import Flask, request, render_template, flash, url_for, send_file, session
+from werkzeug.utils import secure_filename, redirect
+from forms import LoginForm, RegForm
+from password_proccessing import hash_password, check_password
+
 from models import db_session
+from models.__all_models import *
+import os
 
 app = Flask(__name__)
-# app.secret_key = '379cc9d0797b7d3a445eae49288768c6'
-# app.config['SECRET_KEY'] = '379cc9d0797b7d3a445eae49288768c6'
+app.secret_key = '379cc9d0797b7d3a445eae49288768c6'
+app.config['SECRET_KEY'] = '379cc9d0797b7d3a445eae49288768c6'
+
+
+
 
 
 if __name__ == '__main__':
