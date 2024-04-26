@@ -1,4 +1,5 @@
 from flask import Flask
+import os
 from models import db_session
 
 app = Flask(__name__)
@@ -7,6 +8,7 @@ app = Flask(__name__)
 
 
 if __name__ == '__main__':
-    db_session.global_init('db/database.sqlite')
+    os.chdir(os.path.abspath("src/"))
+    db_session.global_init(os.path.abspath('web/db/database.sqlite3'))
     session = db_session.create_session()
     app.run(port=8080, host='127.0.0.1')
