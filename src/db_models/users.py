@@ -1,5 +1,5 @@
 import sqlalchemy
-from models.db_session import SqlAlchemyBase
+from db_models.db_session import SqlAlchemyBase
 
 
 class User(SqlAlchemyBase):
