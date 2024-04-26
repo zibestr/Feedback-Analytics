@@ -6,3 +6,5 @@ data/train_data.csv
 data/readme.md
 .DS_store
 src/*/__pycache__
+models
+models.zip
