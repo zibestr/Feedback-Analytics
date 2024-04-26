@@ -1,4 +1,3 @@
-from string import punctuation
 from typing import Sequence, Iterable
 
 from sklearn.base import BaseEstimator, TransformerMixin
@@ -9,6 +8,8 @@ from natasha import (
     NewsMorphTagger,
     NewsEmbedding
 )
+
+punctuation = r"""!"#$%&'()*+,./:;<=>?@[\]^_`{|}~«»"""
 
 
 class TextNormalizer(BaseEstimator, TransformerMixin):
@@ -32,7 +33,7 @@ class TextNormalizer(BaseEstimator, TransformerMixin):
         return token
 
     def _normalize(self, text: str) -> str:
-        text = ''.join(filter(lambda char: char not in punctuation + '«»',
+        text = ''.join(filter(lambda char: char not in punctuation,
                               text.lower()))
         text = ' '.join(filter(lambda word: word not in self._stopwords,
                                text.split()))

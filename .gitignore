@@ -8,3 +8,4 @@ data/readme.md
 src/*/__pycache__
 models
 models.zip
+__pycache__

@@ -25,7 +25,7 @@ class ColumnsConcatenator(BaseEstimator, TransformerMixin):
     def transform(self, X: pd.DataFrame) -> list[str]:
         X['text'] = X[self.columns[0]]
         for column in self.columns[1:]:
-            X['text'] += X[column]
+            X['text'] += ' ' + X[column]
         return X['text'].to_list()
 
 
@@ -34,14 +34,20 @@ class TransformPipeline(BaseEstimator, TransformerMixin):
 
     def __init__(self,
                  columns: list[str],
-                 ngram_range: tuple[int, int]):
+                 ngram_range: tuple[int, int],
+                 min_df: int | float = 1,
+                 max_df: int | float = 1.0):
         self.columns = columns
         self.ngram_range = ngram_range
+        self.min_df = min_df
+        self.max_df = max_df
         self.concatenator = ColumnsConcatenator(columns)
         self.transformer = Pipeline(steps=[
             ('normalize', TextNormalizer('data/stopwords.txt')),
             ('vectorizer', CountVectorizer(
-                ngram_range=ngram_range
+                ngram_range=ngram_range,
+                min_df=min_df,
+                max_df=max_df
             ))
         ])
 
