@@ -4,3 +4,4 @@ data/column_meaning.csv
 data/readme.md
 data/sample_submission.csv
 data/train_data.csv
+src/web/models/__pycache__
