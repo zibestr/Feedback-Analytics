@@ -1,7 +1,7 @@
 import sqlalchemy
 from sqlalchemy import orm
 
-from models.db_session import SqlAlchemyBase
+from db_models.db_session import SqlAlchemyBase
 
 
 class Course(SqlAlchemyBase):
