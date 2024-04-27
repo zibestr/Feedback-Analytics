@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" src="static/logo.ico">
+    <title>ZhимоVики</title>
+
+    <link rel="stylesheet" href="static/styles.css">
+</head>
+<body>
+    <header>
+        <div>
+            <img src="static/logo.png" alt="Логотип компании" height="50">
+            <nav>
+                ВОЗМОЖНО ЗДЕСЬ ДОБАВИТЬ ДЛЯ ЗАЛОГИНЕННОГО ПОЛЬЗОВАТЕЛЯ ВКЛАДКИ. МОЖЕТ ЛОГО МИРЭА
+            </nav>
+        </div>
+    </header>
+    <main>
+        <h1>НАЗВАНИЕ</h1>
+        <p>Текстик</p>
+    </main>
+    {% block content %}
+    {% endblock %}
+    
+    <footer>
+        <div class="developer" title="Яшин Данила">
+            <a href="https://github.com/zibestr">
+                <img src="static/1.jpg" alt="Яшин Данила">
+            </a>
+        </div>
+        <div class="developer" title="Основин Александр">
+            <a href="https://github.com/PyAlexOs">
+                <img src="static/2.jpg" alt="Основин Александр">
+            </a>
+        </div>
+        <div class="developer" title="Леонид Егоров">
+            <a href="https://github.com/Grander78498">
+                <img src="static/3.jpg" alt="Леонид Егоров">
+            </a>
+        </div>
+        <div class="developer" title="Корольков Александр">
+            <a href="https://github.com/adkorolkov">
+                <img src="static/4.jpg" alt="Корольков Александр">
+            </a>
+        </div>
+    </footer>
+</body>
+</html>

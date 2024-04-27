@@ -1,0 +1,70 @@
+/* Основные стили для страницы */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #fff; /* Белый фон */
+    color: #000; /* Черный текст */
+}
+
+/* Стили для меню */
+header {
+    background-color: #333; /* Темно-серый фон */
+    color: #fff; /* Белый текст */
+    padding: 10px 0;
+    text-align: center;
+}
+
+header a {
+    color: #fff; /* Белый текст для ссылок */
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+/* Стили для футера */
+footer {
+    background-color: #333; /* Темно-серый фон */
+    color: #fff; /* Белый текст */
+    padding: 10px 0;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Стили для основного содержимого */
+main {
+    padding: 20px;
+    text-align: center;
+}
+
+/* Стили для заголовков */
+h1 {
+    color: #000; /* Черный текст */
+}
+
+/* Стили для абзацев */
+p {
+    color: #000; /* Черный текст */
+}
+
+footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
+    padding: 20px;
+}
+
+.developer {
+    margin: 0 10px;
+    transition: transform 1s ease-in-out;
+}
+
+.developer img {
+    width: 100px; /* Подберите размеры фотографий по вашему усмотрению */
+    height: 100px;
+    border-radius: 50%; /* Делаем фото круглыми */
+}
+
+.developer img:hover {
+    transform: scale(1.25); /* Увеличиваем фото при наведении */
+}
