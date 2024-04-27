@@ -3,6 +3,8 @@ from flask_login import LoginManager, UserMixin, login_required, current_user, l
 from werkzeug.utils import secure_filename, redirect
 from tools.forms import LoginForm
 from tools.password_proccessing import hash_password, check_password
+from tools.plot_maker import lesson_stats, pie_plot, keywords_wordcloud
+from getDataFromDb import getData
 
 from db_models.courses import Course
 from db_models.feedbacks import Feedback
@@ -20,27 +22,37 @@ app.config['SECRET_KEY'] = 'whgt9jasqzctj24yg79ve5za6jnwfzqg'
 @app.route("/", methods=["GET", "POST"])
 @app.route("/login", methods=["GET", "POST"])
 def homepage():
-    # TODO Здесь описание проекта в шаблоне и форма login
-    return render_template("login.html")
+    form = LoginForm(request.form)
+    if request.method == 'POST' and form.validate():
+        user = session.query(User).filter(User.nick_name == form.username.data).first()
+
+        if user and check_password(password=form.password.data, key=user.password, salt=user.salt):
+            login_user(user, remember=False)
+            return redirect(url_for("me", id=user.id))
+        
+        flash('Пользователь не найден.')
+    return render_template("login.html", form=form)
 
 
 @app.route("/me?<id>", methods=["GET", "POST"])
 @login_required
 def me(id):
-    # TODO сюда перенаправляется пользователь после логина, здесь статистика
-    return render_template("index.html")
+    courses = session.query(Course).all()
+    data_by_courses: dict
+    return render_template("statistics.html", user_type=int(current_user.type), courses=courses)
 
 
 @login_manager.user_loader
-def load_user(user_id):
+def load_user(id):
     return session.query(User).get(id)
+"""session.query(User).filter(User.id == id).first()"""
 
 
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
-    flash("You have been logged out.")
+    flash("Вы вышли из аккаунта.")
     return redirect("/")
 
 
@@ -48,4 +60,4 @@ if __name__ == '__main__':
     os.chdir(os.path.abspath("src/"))
     db_session.global_init(os.path.abspath('db/database.sqlite3'))
     session = db_session.create_session()
-    app.run(port=8080, host='127.0.0.1')
+    app.run(port=8080, host='0.0.0.0')

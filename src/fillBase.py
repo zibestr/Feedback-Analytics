@@ -1,0 +1,35 @@
+import os
+from db_models import db_session
+import sys
+from db_models.courses import Course
+from db_models.students import Student
+from db_models.feedbacks import Feedback
+os.chdir(os.path.abspath("src/"))
+db_session.global_init(os.path.abspath('db/database.sqlite3'))
+session = db_session.create_session()
+cource_1 = Course(name="Основы программирования")
+cource_2 = Course(name="Продвинутые техники программирования")
+cource_3 = Course(name="Новейшие тенденции в IT")
+cource_4 = Course(name="ChatGPT для обучения")
+cource_5 = Course(name="Управление персоналом")
+cource_6 = Course(name="Знакомство с языком Python")
+cource_7 = Course(name="Java api браузеров")
+cource_8 = Course(name="Дополнительный вебинар 1")
+cource_9 = Course(name="Дополнительный вебинар 2")
+cource_10 = Course(name="Дополнительный вебинар 3")
+cource_11 = Course(name="Дополнительный вебинар 4")
+cource_12 = Course(name="Дополнительный вебинар 5")
+cource_13 = Course(name="Дополнительный вебинар 6")
+cource_14 = Course(name="Дополнительный вебинар 7")
+cource_15 = Course(name="Дополнительный вебинар 8")
+cource_16 = Course(name="Дополнительный вебинар 9")
+cource_17 = Course(name="Дополнительный вебинар 10")
+cource_18 = Course(name="Дополнительный вебинар 11")
+cource_19 = Course(name="Дополнительный вебинар 12")
+cource_20 = Course(name="Дополнительный вебинар 13")
+cource_21 = Course(name="Дополнительный вебинар 14")
+cource_22 = Course(name="Дополнительный вебинар 15")
+# Student.__table__.drop(session.bind)
+# Feedback.__table__.drop(session.bind)
+session.add_all([cource_1,cource_2,cource_3,cource_4,cource_5,cource_6, cource_7,cource_8,  cource_9,  cource_10, cource_11, cource_12, cource_13, cource_14, cource_15, cource_16, cource_17, cource_18, cource_19, cource_20, cource_21, cource_22])
+session.commit()

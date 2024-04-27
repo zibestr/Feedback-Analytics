@@ -1,6 +1,4 @@
 import asyncio
-import os
-import sys
 import logging
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters.command import Command
@@ -11,7 +9,6 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.types.inline_keyboard_markup import InlineKeyboardMarkup
 from aiogram.filters.callback_data import CallbackData
-import getToken
 import os
 from sqlalchemy import select
 import json
@@ -23,7 +20,7 @@ from db_models.students import Student
 from db_models.feedbacks import Feedback
 
 logging.basicConfig(level=logging.INFO)
-API_TOKEN = getToken.getToken()
+API_TOKEN = os.getenv('BOT_TOKEN')
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher()
 

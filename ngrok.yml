@@ -1,0 +1,12 @@
+version: "2"
+authtoken: 2fPgf1YEgU0cVFTcg35IjutjzTO_69hDm6usoc1awvTzjh4pk
+web_addr: 0.0.0.0:4040
+tunnels:
+  website:
+    addr: backend:8080
+    schemes:
+      - https
+    host_header: ""
+    inspect: false
+    proto: http
+    domain: "chief-lemur-finally.ngrok-free.app"

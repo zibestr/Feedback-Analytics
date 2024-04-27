@@ -1,0 +1,34 @@
+services:
+  backend:
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+
+  tgbot:
+    depends_on:
+      - backend
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    environment:
+      - BOT_TOKEN=$BOT_TOKEN
+    ports:
+      - 443:443
+    restart: on-failure
+
+
+  ngrok:
+    image: ngrok/ngrok
+    restart: unless-stopped
+    ports:
+      - 4040:4040
+    command:
+      - "start"
+      - "--all"
+      - "--config"
+      - "/etc/ngrok.yml"
+    depends_on:
+      - backend
+    volumes:
+      - ./ngrok.yml:/etc/ngrok.yml
