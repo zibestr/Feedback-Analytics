@@ -22,7 +22,19 @@
 ### Установка и запуск проекта на Linux и MacOs
 Sanya where?
 ### Запуск проекта в контейнере
-Wo ist Sanya?
+
+Для запуска проекта нужно скачать Docker. На Linux его можно скачать командой:
+```shell
+sudo snap install docker
+```
+Затем склонировать репозиторий:
+```shell
+git clone https://github.com/zibestr/Feedback-Analytics.git
+```
+И выполнить сборку приложения:
+```shell
+sudo docker compose up
+```
 
 ---
 
