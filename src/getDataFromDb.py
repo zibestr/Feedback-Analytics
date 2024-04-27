@@ -9,7 +9,7 @@ from db_models.feedbacks import Feedback
 import pandas
 def getData():
     os.chdir(os.path.abspath("src/"))
-    db_session.global_init(os.path.abspath('web/db/database.sqlite3'))
+    db_session.global_init(os.path.abspath('db/database.sqlite3'))
     session = db_session.create_session()
     statement = select(Feedback).order_by(Feedback.id.desc())
     user_obj = session.scalars(statement).fetchmany(100)

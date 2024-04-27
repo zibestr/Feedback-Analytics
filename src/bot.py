@@ -28,7 +28,7 @@ bot = Bot(token=API_TOKEN)
 dp = Dispatcher()
 
 os.chdir(os.path.abspath("src/"))
-db_session.global_init(os.path.abspath('web/db/database.sqlite3'))
+db_session.global_init(os.path.abspath('db/database.sqlite3'))
 session = db_session.create_session()
 statement = select(Course)
 textFromDb = session.scalars(statement).all()
