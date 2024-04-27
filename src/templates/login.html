@@ -1,5 +1,17 @@
 {% extends 'base.html' %}
 
 {% block content %}
-LOGIN FORM HERE AND MAIN PAGE DATA
+<div class="container_login">
+    <div class="login-container">
+        <form action="#" method="post">
+            {{ form.username(class="button", placeholder=form.username.label.text) }}
+            {{ form.password(class="button", placeholder=form.password.label.text) }}
+            {{ form.submit(class="submit_button", placeholder=form.submit.label.text, type="submit") }}
+        </form>
+    </div>
+    <div class="background">
+        <h1>Welcome</h1>
+        <p>Please log in to access your account</p>
+    </div>
+</div>
 {% endblock %}

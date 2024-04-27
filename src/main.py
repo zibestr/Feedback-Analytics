@@ -20,8 +20,24 @@ app.config['SECRET_KEY'] = 'whgt9jasqzctj24yg79ve5za6jnwfzqg'
 @app.route("/", methods=["GET", "POST"])
 @app.route("/login", methods=["GET", "POST"])
 def homepage():
-    # TODO Здесь описание проекта в шаблоне и форма login
-    return render_template("login.html")
+    form = LoginForm(request.form)
+    if request.method == 'POST':
+        print("1111")
+        
+    if form.validate():
+        print("222222")
+    
+    if request.method == 'POST' and form.validate():
+        user = session.query(User).filter(User.nick_name == form.username.data).first()
+        print("00000")
+
+        if user and check_password(password=form.password.data, key=user.password, salt=user.salt):
+            print("here")
+            login_user(user, remember=False)
+            return redirect(url_for("me", id=user.id))
+        
+        flash('Пользователь не найден.')
+    return render_template("login.html", form=form)
 
 
 @app.route("/me?<id>", methods=["GET", "POST"])
@@ -32,7 +48,7 @@ def me(id):
 
 
 @login_manager.user_loader
-def load_user(user_id):
+def load_user(id):
     return session.query(User).get(id)
 
 
@@ -40,7 +56,7 @@ def load_user(user_id):
 @login_required
 def logout():
     logout_user()
-    flash("You have been logged out.")
+    flash("Вы вышли из аккаунта.")
     return redirect("/")
 
 
