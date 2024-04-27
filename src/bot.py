@@ -59,14 +59,14 @@ class CourceCallback(CallbackData, prefix="cource"):
 
 async def setUserIDInDB(message: types.Message, state: FSMContext):
     data = await state.get_data()
-    ID = int(data["ID"])
     try:
+        ID = int(data["ID"])
         student = Student(system_id=ID, course_id=1)
         session.add_all([student])
         session.commit()
         await message.answer("ID {} пользователя получен и занесён в базу данных. При желании написать отзыв нажмите команду \n /feedback".format(ID))
     except Exception as e:
-        t = state.get_data()
+        t = await state.get_data()
         if "(sqlite3.IntegrityError) UNIQUE constraint failed" in str(e) and "ID" in t and t["ID"]>0:
             await message.answer("Такой ID уже используется, просто наберите \n /feedback")
         else:
