@@ -20,12 +20,21 @@ app.config['SECRET_KEY'] = 'whgt9jasqzctj24yg79ve5za6jnwfzqg'
 @app.route("/", methods=["GET", "POST"])
 @app.route("/login", methods=["GET", "POST"])
 def homepage():
-    form = LoginForm()
+    form = LoginForm(request.form)
+    if request.method == 'POST':
+        print("1111")
+        
+    if form.validate():
+        print("222222")
+    
     if request.method == 'POST' and form.validate():
         user = session.query(User).filter(User.nick_name == form.username.data).first()
+        print("00000")
 
         if user and check_password(password=form.password.data, key=user.password, salt=user.salt):
-            return redirect(url_for("me"), id=user.id)
+            print("here")
+            login_user(user, remember=False)
+            return redirect(url_for("me", id=user.id))
         
         flash('Пользователь не найден.')
     return render_template("login.html", form=form)

@@ -88,20 +88,23 @@ nav a {
 
 input[type="text"],
 input[type="password"],
-button {
+.button {
     width: 100%;
     margin-bottom: 10px;
     padding: 10px;
 }
 
-button {
+.submit_button {
     background-color: #4CAF50;
     color: white;
     border: none;
     cursor: pointer;
+    width: 100%;
+    height: 10%;
+    margin-bottom: 10px;
 }
 
-button:hover {
+.submit_button:hover {
     background-color: #45a049;
 }
 

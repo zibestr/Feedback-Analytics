@@ -4,9 +4,9 @@
 <div class="container_login">
     <div class="login-container">
         <form action="#" method="post">
-            <input type="text" placeholder="Username" required>
-            <input type="password" placeholder="Password" required>
-            <button type="submit">Sign in</button>
+            {{ form.username(class="button", placeholder=form.username.label.text) }}
+            {{ form.password(class="button", placeholder=form.password.label.text) }}
+            {{ form.submit(class="submit_button", placeholder=form.submit.label.text, type="submit") }}
         </form>
     </div>
     <div class="background">
