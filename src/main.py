@@ -21,18 +21,10 @@ app.config['SECRET_KEY'] = 'whgt9jasqzctj24yg79ve5za6jnwfzqg'
 @app.route("/login", methods=["GET", "POST"])
 def homepage():
     form = LoginForm(request.form)
-    if request.method == 'POST':
-        print("1111")
-        
-    if form.validate():
-        print("222222")
-    
     if request.method == 'POST' and form.validate():
         user = session.query(User).filter(User.nick_name == form.username.data).first()
-        print("00000")
 
         if user and check_password(password=form.password.data, key=user.password, salt=user.salt):
-            print("here")
             login_user(user, remember=False)
             return redirect(url_for("me", id=user.id))
         
@@ -43,13 +35,16 @@ def homepage():
 @app.route("/me?<id>", methods=["GET", "POST"])
 @login_required
 def me(id):
+    print(current_user)
+    nav_bar = 0
+    user_type = 0
     # TODO сюда перенаправляется пользователь после логина, здесь статистика
-    return render_template("index.html")
+    return render_template("statistics.html", user_type=user_type)
 
 
 @login_manager.user_loader
 def load_user(id):
-    return session.query(User).get(id)
+    return session.query(User).get(int(id))
 
 
 @app.route('/logout')

@@ -17,19 +17,24 @@
                         <img src="static/logo.png" alt="ZhимоVики">
                         <img src="static/MIREA.png" alt="MIREA">
                     </div>
-                    <div class="menu">
-                        <ul>
-                            <li><a href="#">Home</a></li>
-                            <li class="dropdown">
-                                <a href="#">Classes <span class="arrow">&uarr;</span></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Math</a></li>
-                                    <li><a href="#">Science</a></li>
-                                    <li><a href="#">History</a></li>
+
+                    {% if current_user.is_authenticated %}
+                        {% if user_type == 0 %}
+                            <div class="menu">
+                                <ul>
+                                    <li><a href="#">Home</a></li>
+                                    <li class="dropdown">
+                                        <a href="#">Classes <span class="arrow">&uarr;</span></a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="#">Math</a></li>
+                                            <li><a href="#">Science</a></li>
+                                            <li><a href="#">History</a></li>
+                                        </ul>
+                                    </li>
                                 </ul>
-                            </li>
-                        </ul>
-                    </div>
+                            </div>
+                        {% endif %}
+                    {% endif %}
                 </div>
             </nav>
         </div>
