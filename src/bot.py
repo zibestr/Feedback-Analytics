@@ -1,4 +1,6 @@
 import asyncio
+import os
+import sys
 import logging
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters.command import Command
@@ -9,15 +11,30 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.types.inline_keyboard_markup import InlineKeyboardMarkup
 from aiogram.filters.callback_data import CallbackData
-from token import token
+import getToken
+import os
+from sqlalchemy import select
+import json
+import importlib.util
+
+from db_models import db_session
+from db_models.courses import Course
+from db_models.students import Student
+from db_models.feedbacks import Feedback
 
 logging.basicConfig(level=logging.INFO)
-bot = Bot(token=token)
+API_TOKEN = getToken.getToken()
+bot = Bot(token=API_TOKEN)
 dp = Dispatcher()
 
+os.chdir(os.path.abspath("src/"))
+db_session.global_init(os.path.abspath('web/db/database.sqlite3'))
+session = db_session.create_session()
+statement = select(Course)
+textFromDb = session.scalars(statement).all()
 
-textFromDb = ["Курс авгнцапвапцапвцпувапцапавпуцавпуцр 1", "Курс ооуоплрорпораоропорпрваенаунавцавнуц 2", "Курс пувцпавуарпвауцпавншлфавгецнуавуцевц 3", "Курсорноршгрупаркупаеасеуасеаучеуаке 4"]
 
+web_size = 10
 
 
 class ID(StatesGroup):
@@ -26,7 +43,7 @@ class ID(StatesGroup):
 
 class Form(StatesGroup):
     removeID = State()
-    question1 = State()
+    WebID = State()
     question2 = State()
     question3 = State()
     question4 = State()
@@ -39,13 +56,26 @@ class MarkCallback(CallbackData, prefix="mark"):
 
 
 class CourceCallback(CallbackData, prefix="cource"):
+    nex: int
     data: int
 
 
 async def setUserIDInDB(message: types.Message, state: FSMContext):
     data = await state.get_data()
-    ID = data["ID"]
-    await message.answer("ID {} пользователя получен и занесён в базу данных. При желании написать отзыв нажмите команду \n /feedback".format(ID))
+    ID = int(data["ID"])
+    try:
+        student = Student(system_id=ID, course_id=1)
+        session.add_all([student])
+        session.commit()
+        await message.answer("ID {} пользователя получен и занесён в базу данных. При желании написать отзыв нажмите команду \n /feedback".format(ID))
+    except Exception as e:
+        t = state.get_data
+        if "(sqlite3.IntegrityError) UNIQUE constraint failed" in str(e) and "ID" in t and t["ID"]>0:
+            await message.answer("Такой ID уже используется, просто наберите \n /feedback")
+        else:
+            print("FFFFFFFFFFFFFFFFFFFF")
+        session.rollback()
+
 
 
 
@@ -58,9 +88,11 @@ async def cmd_start(message: types.Message, state: FSMContext) -> None:
 
 
 
-# Хэндлер на команду /start
+# Хэндлер на команду /feedback
 @dp.message(Command("feedback"))
 async def cmd_feedbask(message: types.Message) -> None:
+    global textFromDb
+    textFromDb = session.scalars(statement).all()
     builder = InlineKeyboardBuilder()
     for index in range(1, 6):
         builder.button(text=f"{index}", callback_data=MarkCallback(data=index))
@@ -86,24 +118,46 @@ async def contin(call: Message, state: FSMContext):
         reply_markup=None
     )
     builder = InlineKeyboardBuilder()
-    for index in range(len(textFromDb)):
-        builder.button(text= textFromDb[index], callback_data=CourceCallback(data=(index+1)))
+    if len(textFromDb)<= web_size:
+        for index in textFromDb:
+            builder.button(text= index.name, callback_data=CourceCallback(data=index.id, nex=-1))
+    else:
+        for index in textFromDb[:web_size]:
+            builder.button(text= index.name, callback_data=CourceCallback(data=index.id, nex=-1))
+        builder.button(text=u"\u2192", callback_data=CourceCallback(data=-1,nex=web_size))
+    builder.adjust(1)
     await call.message.answer("Выберите вебинар", reply_markup=builder.as_markup())
-    await state.set_state(Form.question1)
+    await state.set_state(Form.WebID)
 
 
-@dp.callback_query(CourceCallback.filter(F.data != 0))
-async def Question1(call : CallbackQuery, callback_data: CourceCallback, state: FSMContext) -> None:
+
+@dp.callback_query(CourceCallback.filter(F.nex!=-1))
+async def Next(call : CallbackQuery, callback_data : CourceCallback):
+    builder = InlineKeyboardBuilder()
     await call.answer()
+    for index in textFromDb[callback_data.nex:web_size+callback_data.nex]:
+        builder.button(text= index.name, callback_data=CourceCallback(data=index.id, nex=-1))
+    if callback_data.nex-web_size>=0:
+        builder.button(text=u"\u2190", callback_data=CourceCallback(data=-1,nex=callback_data.nex-web_size))
+    if callback_data.nex+web_size<len(textFromDb):
+        builder.button(text=u"\u2192", callback_data=CourceCallback(data=-1,nex=callback_data.nex+web_size))
+    builder.adjust(1)
+    await bot.edit_message_reply_markup(chat_id=call.message.chat.id, message_id=call.message.message_id, reply_markup=builder.as_markup())
+
+
+@dp.callback_query(CourceCallback.filter(F.data != -1))
+async def Question1(call : CallbackQuery, callback_data: CourceCallback, state: FSMContext) -> None:
     remove = await state.get_data()
+    print(remove)
     remove = remove["RemoveMessage"] if "RemoveMessage" in remove else None
     if remove is not None:
-        await bot.edit_message_text(chat_id=call.message.chat.id,message_id=remove, text="Выбран вебинар {} \n Что вам больше всего понравилось в теме вебинара и почему?".format(textFromDb[callback_data.data-1]))
+        await bot.edit_message_text(chat_id=call.message.chat.id,message_id=remove, text="Выбран вебинар {} \n Что вам больше всего понравилось в теме вебинара и почему?".format(textFromDb[callback_data.data-1].name))
     else:
-        r = await call.message.answer("Выбран вебинар {} \n  Что вам больше всего понравилось в теме вебинара и почему?".format(textFromDb[callback_data.data-1]))
+        r = await call.message.answer("Выбран вебинар {} \n  Что вам больше всего понравилось в теме вебинара и почему?".format(textFromDb[callback_data.data-1].name))
         await state.update_data(RemoveMessage=r.message_id)
-    await state.update_data(question1=callback_data.data)
+    await state.update_data(WebID=callback_data.data)
     await state.set_state(Form.question2)
+    await call.answer()
 
 
 
@@ -136,11 +190,26 @@ async def echo(message: Message,  state: FSMContext) -> None:
 
 async def putInDb(message: Message, state: FSMContext) -> None:
     data = await state.get_data()
+    ID = data["ID"]
+    await state.clear()
+    await state.update_data(ID=ID)
     del data["RemoveMessage"]
-    s = ""
+    res = {}
     for i in data:
-        s+= "{} - {}\n".format(i,data[i])
-    await message.answer("Этого не должно быть, но пока не прикручена бд сливаем данные сюда \n {}".format(s))
+        res[i] = data[i]
+    w = str(res) # Сериализованная строка словаря для того, чтобы unique работал
+    try:
+        statement = select(Student).filter_by(system_id=ID, course_id=1)
+        user_obj = session.scalars(statement).all()
+        student_id = user_obj[0].id
+        feedback = Feedback(answers=w, student_id=student_id)
+        session.add_all([feedback])
+        session.commit()
+    except Exception as e:
+        if "UNIQUE constraint failed" in str(e):
+            await message.answer("Отзыв заполняется не первый раз. Все результаты были получены. Вы можете написать отзыв на другой вебинар командой \n /feedback")
+            session.rollback()
+        print(e)
 
 
 

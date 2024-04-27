@@ -1,13 +1,14 @@
+import pandas as pd
 from sklearn.ensemble import AdaBoostClassifier, GradientBoostingClassifier
 from sklearn.naive_bayes import ComplementNB
 from sklearn.tree import DecisionTreeClassifier
 
 from src.analytics.model import Model, MultiLabelsClassifier
 from src.analytics.pipeline import TransformPipeline
-from src.analytics.topic.keywords_extractor import KeywordExtractor
 
 
-def load_classifier(folder: str = 'models') -> Model:
+def fit(df_filename: str) -> Model:
+    dataframe = pd.read_csv(df_filename)
     params1 = {
         'estimator': DecisionTreeClassifier(max_depth=2,
                                             min_samples_split=4,
@@ -36,18 +37,10 @@ def load_classifier(folder: str = 'models') -> Model:
                                 positive_clf)
 
     pipeline = TransformPipeline(columns=['question_1', 'question_2',
-                                          'question_3', 'question_4',
-                                          'question_5'],
-                                 ngram_range=(1, 3),
-                                 max_df=0.9)
+                                            'question_3', 'question_4',
+                                            'question_5'],
+                                    ngram_range=(1, 3),
+                                    max_df=0.9)
 
     model = Model(pipeline, clf)
-    return model.load(folder)
-
-
-def load_topic_model(folder: str = 'models') -> Model:
-    topic_model = KeywordExtractor(model_n_components=125,
-                                   model_max_iter=200,
-                                   n_topics=1)
-
-    return topic_model.load(folder)
+    return model.fit(dataframe)
