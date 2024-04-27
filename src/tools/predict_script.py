@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from src.analytics.load_script import load_classifier, load_topic_model
+from analytics.load_script import load_classifier, load_topic_model
 
 
 def predict_classes(df: pd.DataFrame,
