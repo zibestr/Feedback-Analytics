@@ -1,57 +1,42 @@
-/* Основные стили для страницы */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #fff; /* Белый фон */
-    color: #000; /* Черный текст */
-}
-
-/* Стили для меню */
 header {
-    background-color: #333; /* Темно-серый фон */
-    color: #fff; /* Белый текст */
+    background-color: #333;
+    color: #fff;
     padding: 10px 0;
     text-align: center;
 }
 
 header a {
-    color: #fff; /* Белый текст для ссылок */
+    color: #4CAF50;
     text-decoration: none;
     margin: 0 10px;
 }
 
-/* Стили для футера */
 footer {
-    background-color: #333; /* Темно-серый фон */
-    color: #fff; /* Белый текст */
-    padding: 10px 0;
+    background-color: #333;
+    color: #fff;
+    padding: 20px 0;
+    display: flex;
+    justify-content: center;
     text-align: center;
+    align-items: center;
     position: fixed;
     bottom: 0;
     width: 100%;
 }
 
-/* Стили для основного содержимого */
 main {
     padding: 20px;
     text-align: center;
 }
 
-/* Стили для заголовков */
 h1 {
-    color: #000; /* Черный текст */
+    color: #000;
+    size: 18px;
 }
 
-/* Стили для абзацев */
 p {
-    color: #000; /* Черный текст */
-}
-
-footer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #f0f0f0;
-    padding: 20px;
+    color: #4CAF50;
+    size: 14px;
 }
 
 .developer {
@@ -67,4 +52,120 @@ footer {
 
 .developer img:hover {
     transform: scale(1.25); /* Увеличиваем фото при наведении */
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+}
+
+nav {
+    background-color: #000;
+    color: #fff;
+    padding: 10px 0;
+    text-align: center;
+}
+
+nav a {
+    color: #4CAF50;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+.container_login {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.login-container {
+    width: 30%;
+    float: right;
+    margin-top: 50px;
+}
+
+input[type="text"],
+input[type="password"],
+.button {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+.submit_button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    height: 10%;
+    margin-bottom: 10px;
+}
+
+.submit_button:hover {
+    background-color: #45a049;
+}
+
+.background {
+    background-color: #fff;
+    padding: 20px;
+    width: 65%;
+    float: left;
+    margin-top: 50px;
+}
+
+.background h1 {
+    color: #000;
+    margin-bottom: 10px;
+}
+
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
+
+.menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+.menu li {
+    margin: 0 10px;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #fff;
+    padding: 10px;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.arrow {
+    margin-left: 5px;
+    font-size: 12px;
 }
