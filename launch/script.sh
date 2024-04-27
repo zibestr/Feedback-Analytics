@@ -1,6 +1,6 @@
 #!/bin/bash
 
-link=$(cat link.txt)
+link="https://www.dropbox.com/scl/fi/f0jcmvdyoxfo5vjjd1x4x/models.zip?rlkey=9rm5668smt8cophi2aa23qb3d&st=cs7h4py7&dl=0"
 archive_name=$(basename "$link")
 dir_name=$(echo "$archive_name" | cut -d. -f1)
 
@@ -19,6 +19,4 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 
-python3 manage.py makemigrations
-python3 manage.py migrate
-python3 manage.py runserver
+export BOT_TOKEN="7039717257:AAEduH_t-lH8XJh91c2jrmhNpvCkpWvyqkI"
