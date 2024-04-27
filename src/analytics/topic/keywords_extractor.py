@@ -4,6 +4,7 @@ from sklearn.decomposition import LatentDirichletAllocation, NMF
 from src.analytics.pipeline import TransformPipeline
 import numpy as np
 import pandas as pd
+from pickle import dump, load
 
 
 class KeywordExtractor(Pipeline):
@@ -56,26 +57,10 @@ class KeywordExtractor(Pipeline):
         if not self.__fitted:
             raise AttributeError('Fit estimator before usage.')
 
-        if isinstance(text, str):
-            text = [text]
-
         tf_matrix = self._preprocessor.transform(text)
         topics = self._topic_model.transform(tf_matrix)
 
-        # topics = np.squeeze(topics,
-        #                     axis=0)
-
         return [self._extract_topic(n_keywords, topic) for topic in topics]
-        # final_keywords = []
-        # row = []
-
-        # for topic_ind in range(self.n_topics):
-        #     row = []
-        #     for keyword_ind in range(n_keywords):
-        #         row.append(keywords[topic_ind * n_keywords + keyword_ind])
-        #     final_keywords.append(row)
-
-        # return final_keywords
 
     def _extract_topic(self,
                        n_keywords: int,
@@ -106,3 +91,18 @@ class KeywordExtractor(Pipeline):
 
     def predict(self, X):
         raise NotImplementedError('Not usage.')
+
+    def dump(self, folder: str = 'models') -> None:
+        self._preprocessor.dump(num=2)
+        with open(f'{folder}/topic_model.pkl', 'wb') as binfile:
+            dump(self._topic_model, binfile)
+
+    def load(self, folder: str = 'models') -> BaseEstimator:
+        self._preprocessor = self._preprocessor.load(num=2)
+        self._vectorizer = self._preprocessor.transformer[1]
+        self.steps[0] = ('preprocess', self._preprocessor)
+        with open(f'{folder}/topic_model.pkl', 'rb') as binfile:
+            self._topic_model = load(binfile)
+        self.steps[1] = ('topic_model', self._topic_model)
+        self.__fitted = True
+        return self
