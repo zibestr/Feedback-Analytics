@@ -187,15 +187,15 @@ async def echo(message: Message,  state: FSMContext) -> None:
 
 async def putInDb(message: Message, state: FSMContext) -> None:
     data = await state.get_data()
-    ID = data["ID"]
-    await state.clear()
-    await state.update_data(ID=ID)
-    del data["RemoveMessage"]
-    res = {}
-    for i in data:
-        res[i] = data[i]
-    w = str(res) # Сериализованная строка словаря для того, чтобы unique работал
     try:
+        ID = data["ID"]
+        await state.clear()
+        await state.update_data(ID=ID)
+        del data["RemoveMessage"]
+        res = {}
+        for i in data:
+            res[i] = data[i]
+        w = str(res) # Сериализованная строка словаря для того, чтобы unique работал
         statement = select(Student).filter_by(system_id=ID, course_id=1)
         user_obj = session.scalars(statement).all()
         student_id = user_obj[0].id
@@ -206,6 +206,8 @@ async def putInDb(message: Message, state: FSMContext) -> None:
         if "UNIQUE constraint failed" in str(e):
             await message.answer("Отзыв заполняется не первый раз. Все результаты были получены. Вы можете написать отзыв на другой вебинар командой \n /feedback")
             session.rollback()
+        else:
+            await message.answer("Произошла ошибка. Повторите позже")
         print(e)
 
 
