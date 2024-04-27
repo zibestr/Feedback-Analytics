@@ -1,0 +1,23 @@
+services:
+  backend:
+    build:
+      dockerfile: Dockerfile
+    volumes:
+      - ./src:/src
+    ports:
+      - 8080:8080
+
+  ngrok:
+    image: ngrok/ngrok
+    restart: unless-stopped
+    ports:
+      - 4040:4040
+    command:
+      - "start"
+      - "--all"
+      - "--config"
+      - "/etc/ngrok.yml"
+    depends_on:
+      - backend
+    volumes:
+      - ./ngrok.yml:/etc/ngrok.yml
