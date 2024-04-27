@@ -48,4 +48,4 @@ if __name__ == '__main__':
     os.chdir(os.path.abspath("src/"))
     db_session.global_init(os.path.abspath('db/database.sqlite3'))
     session = db_session.create_session()
-    app.run(port=8080, host='127.0.0.1')
+    app.run(port=8080, host='0.0.0.0')
