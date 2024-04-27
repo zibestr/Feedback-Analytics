@@ -6,7 +6,7 @@ import pandas as pd
 import seaborn as sns
 from wordcloud import WordCloud
 
-from src.analytics.load_script import load_topic_model
+from analytics.load_script import load_topic_model
 
 
 def lesson_stats(lesson_name: str, dataframe: pd.DataFrame) -> str:
