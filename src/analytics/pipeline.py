@@ -6,7 +6,7 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.pipeline import Pipeline
 
-from src.analytics.preprocess import TextNormalizer
+from analytics.preprocess import TextNormalizer
 
 
 class ColumnsConcatenator(BaseEstimator, TransformerMixin):
