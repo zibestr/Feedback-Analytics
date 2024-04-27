@@ -64,12 +64,12 @@ class TransformPipeline(BaseEstimator, TransformerMixin):
         texts = self.concatenator.transform(X)
         return self.transformer.transform(texts)
 
-    def dump(self, folder: str = 'models') -> None:
-        with open(f'{folder}/pipeline.pkl', 'wb') as binfile:
+    def dump(self, folder: str = 'models', num: int = 1) -> None:
+        with open(f'{folder}/pipeline{num}.pkl', 'wb') as binfile:
             dump(self.transformer[1], binfile)
 
-    def load(self, folder: str = 'models') -> BaseEstimator:
-        with open(f'{folder}/pipeline.pkl', 'rb') as binfile:
+    def load(self, folder: str = 'models', num: int = 1) -> BaseEstimator:
+        with open(f'{folder}/pipeline{num}.pkl', 'rb') as binfile:
             self.transformer = Pipeline(steps=[
                 ('normalize', TextNormalizer('data/stopwords.txt').fit()),
                 ('vectorizer', load(binfile))
