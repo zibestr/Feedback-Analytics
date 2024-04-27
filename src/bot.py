@@ -67,7 +67,7 @@ async def setUserIDInDB(message: types.Message, state: FSMContext):
         await message.answer("ID {} пользователя получен и занесён в базу данных. При желании написать отзыв нажмите команду \n /feedback".format(ID))
     except Exception as e:
         t = await state.get_data()
-        if "(sqlite3.IntegrityError) UNIQUE constraint failed" in str(e) and "ID" in t and t["ID"]>0:
+        if "(sqlite3.IntegrityError) UNIQUE constraint failed" in str(e) and "ID" in t and int(t["ID"])>0:
             await message.answer("Такой ID уже используется, просто наберите \n /feedback")
         else:
             print("FFFFFFFFFFFFFFFFFFFF")
