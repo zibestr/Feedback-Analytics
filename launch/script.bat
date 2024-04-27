@@ -8,9 +8,11 @@ set /p LINK=<link.txt
 :: Read link from link.txt
 set /p LINK=<link.txt
 
+
 echo Downloading archive from %link%...
 :: Download archive from the link
 curl -OL %link% --output archive.zip
+
 
 :: Unzip archive
 tar -xf models.zip
@@ -18,6 +20,7 @@ tar -xf models.zip
 :: Delete downloaded archive
 del models.zip
 
+move %cd%\models %cd%\..
 
 
 :: Download Python installer using curl
