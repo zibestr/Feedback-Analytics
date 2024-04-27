@@ -1,6 +1,6 @@
 from sklearn.base import BaseEstimator
 from sklearn.pipeline import Pipeline
-from sklearn.decomposition import LatentDirichletAllocation, NMF
+from sklearn.decomposition import NMF
 from analytics.pipeline import TransformPipeline
 import numpy as np
 import pandas as pd
@@ -32,7 +32,6 @@ class KeywordExtractor(Pipeline):
             ('topic_model', NMF(
                 n_components=model_n_components,
                 max_iter=model_max_iter,))
-                #  n_jobs=model_n_jobs))
         ])
 
         self._preprocessor = self.steps[0][1]

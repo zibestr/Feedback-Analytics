@@ -11,7 +11,7 @@ class MultiLabelsClassifier(BaseEstimator):
     First model - relevant\
     Second model - object\
     Third model - is_positive
-    '''    
+    '''
     __fitted: bool = False
 
     def __init__(self,
@@ -108,4 +108,5 @@ class Model(BaseEstimator):
         self.transformer.load(folder)
         self.classifier.load(folder)
         self.__fitted = True
+
         return self
