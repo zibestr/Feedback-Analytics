@@ -30,11 +30,11 @@ git clone https://github.com/zibestr/Feedback-Analytics.git
 source ./launch/script.sh
 ```
 Запуск сайта производится командой:
-```python
+```shell
 python3 ./src/main.py
 ```
 Запуск бота производится командой:
-```python
+```shell
 python3 ./src/bot.py
 ```
 
