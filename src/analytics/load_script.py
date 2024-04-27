@@ -2,9 +2,9 @@ from sklearn.ensemble import AdaBoostClassifier, GradientBoostingClassifier
 from sklearn.naive_bayes import ComplementNB
 from sklearn.tree import DecisionTreeClassifier
 
-from src.analytics.model import Model, MultiLabelsClassifier
-from src.analytics.pipeline import TransformPipeline
-from src.analytics.topic.keywords_extractor import KeywordExtractor
+from analytics.model import Model, MultiLabelsClassifier
+from analytics.pipeline import TransformPipeline
+from analytics.topic.keywords_extractor import KeywordExtractor
 
 
 def load_classifier(folder: str = 'models') -> Model:

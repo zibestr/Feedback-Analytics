@@ -3,6 +3,8 @@ from flask_login import LoginManager, UserMixin, login_required, current_user, l
 from werkzeug.utils import secure_filename, redirect
 from tools.forms import LoginForm
 from tools.password_proccessing import hash_password, check_password
+from tools.plot_maker import lesson_stats, pie_plot, keywords_wordcloud
+from getDataFromDb import getData
 
 from db_models.courses import Course
 from db_models.feedbacks import Feedback
@@ -35,16 +37,15 @@ def homepage():
 @app.route("/me?<id>", methods=["GET", "POST"])
 @login_required
 def me(id):
-    print(current_user)
-    nav_bar = 0
-    user_type = 0
-    # TODO сюда перенаправляется пользователь после логина, здесь статистика
-    return render_template("statistics.html", user_type=user_type)
+    courses = session.query(Course).all()
+    data_by_courses: dict
+    return render_template("statistics.html", user_type=int(current_user.type), courses=courses)
 
 
 @login_manager.user_loader
 def load_user(id):
-    return session.query(User).get(int(id))
+    return session.query(User).get(id)
+"""session.query(User).filter(User.id == id).first()"""
 
 
 @app.route('/logout')

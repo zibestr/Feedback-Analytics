@@ -1,7 +1,7 @@
 from sklearn.base import BaseEstimator
 from sklearn.pipeline import Pipeline
 from sklearn.decomposition import LatentDirichletAllocation, NMF
-from src.analytics.pipeline import TransformPipeline
+from analytics.pipeline import TransformPipeline
 import numpy as np
 import pandas as pd
 from pickle import dump, load
