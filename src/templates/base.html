@@ -11,19 +11,33 @@
 <body>
     <header>
         <div>
-            <img src="static/logo.png" alt="Логотип компании" height="50">
             <nav>
-                ВОЗМОЖНО ЗДЕСЬ ДОБАВИТЬ ДЛЯ ЗАЛОГИНЕННОГО ПОЛЬЗОВАТЕЛЯ ВКЛАДКИ. МОЖЕТ ЛОГО МИРЭА
+                <div class="container">
+                    <div class="logo">
+                        <img src="static/logo.png" alt="ZhимоVики">
+                        <img src="static/MIREA.png" alt="MIREA">
+                    </div>
+                    <div class="menu">
+                        <ul>
+                            <li><a href="#">Home</a></li>
+                            <li class="dropdown">
+                                <a href="#">Classes <span class="arrow">&uarr;</span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">Math</a></li>
+                                    <li><a href="#">Science</a></li>
+                                    <li><a href="#">History</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </nav>
         </div>
     </header>
     <main>
-        <h1>НАЗВАНИЕ</h1>
-        <p>Текстик</p>
-    </main>
     {% block content %}
     {% endblock %}
-    
+    </main>
     <footer>
         <div class="developer" title="Яшин Данила">
             <a href="https://github.com/zibestr">
