@@ -20,7 +20,23 @@
 Саня где?
 
 ### Linux & MacOs
-Sanya where?
+
+Для запуска проекта нужно склонировать репозиторий:
+```shell
+git clone https://github.com/zibestr/Feedback-Analytics.git
+```
+Затем нужно запустить скрипт launch/script.sh:
+```shell
+source ./launch/script.sh
+```
+Запуск сайта производится командой:
+```python
+python3 ./src/main.py
+```
+Запуск бота производится командой:
+```python
+python3 ./src/bot.py
+```
 
 ### Запуск проекта в контейнере
 
