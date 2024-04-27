@@ -1,0 +1,12 @@
+#!/bin/bash
+
+if [ ! command -v docker ]
+then
+  echo "Установка Docker..."
+  sudo snap install docker
+fi
+echo "Сборка контейнера..."
+docker image prune -f
+docker build -t project_image ..
+docker run -it --rm --name=project -p8080:8080 project_image
+ngrok http 8080 --domain=chief-lemur-finally.ngrok-free.app
