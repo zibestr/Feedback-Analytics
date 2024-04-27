@@ -65,7 +65,7 @@ pymorphy2-dicts-ru==2.4.417127.4579844
 pyparsing==3.1.2
 python-dateutil==2.9.0.post0
 pytz==2024.1
-pywin32==306
+pywin32==306; sys_platform=="Windows"
 pyzmq==26.0.2
 razdel==0.5.0
 scikit-learn==1.4.2
