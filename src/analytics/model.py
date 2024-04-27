@@ -11,7 +11,9 @@ class MultiLabelsClassifier(BaseEstimator):
     First model - relevant\
     Second model - object\
     Third model - is_positive
-    '''
+    '''    
+    __fitted: bool = False
+
     def __init__(self,
                  relevant_model: BaseEstimator,
                  object_model: BaseEstimator,
@@ -21,6 +23,7 @@ class MultiLabelsClassifier(BaseEstimator):
         self.positive_model = positive_model
 
     def fit(self, X, *y_labels: np.ndarray) -> BaseEstimator:
+        self.__fitted = True
         for model, target in zip([
                 self.relevant_model,
                 self.object_model,
@@ -43,17 +46,36 @@ class MultiLabelsClassifier(BaseEstimator):
             result = np.vstack((result, model.predict(X)))
         return result[1:].T
 
+    def __sklearn_is_fitted__(self) -> bool:
+        return self.__fitted
+
     def dump(self, folder: str = 'models') -> None:
-        with open(f'{folder}/classifier.pkl', 'wb') as binfile:
-            dump(self, binfile)
+        with open(f'{folder}/relevant.pkl', 'wb') as binfile:
+            dump(self.relevant_model, binfile)
+
+        with open(f'{folder}/object.pkl', 'wb') as binfile:
+            dump(self.object_model, binfile)
+
+        with open(f'{folder}/positive.pkl', 'wb') as binfile:
+            dump(self.positive_model, binfile)
 
     def load(self, folder: str = 'models') -> BaseEstimator:
-        with open(f'{folder}/classifier.pkl', 'rb') as binfile:
-            self = load(binfile)
+        self.__fitted = True
+        with open(f'{folder}/relevant.pkl', 'rb') as binfile:
+            self.relevant_model = load(binfile)
+
+        with open(f'{folder}/object.pkl', 'rb') as binfile:
+            self.object_model = load(binfile)
+
+        with open(f'{folder}/positive.pkl', 'rb') as binfile:
+            self.positive_model = load(binfile)
+
         return self
 
 
 class Model(BaseEstimator):
+    __fitted: bool = False
+
     def __init__(self,
                  transformer: TransformerMixin,
                  classifier: BaseEstimator):
@@ -65,6 +87,7 @@ class Model(BaseEstimator):
         y_relevant = dataframe['is_relevant'].to_numpy()
         y_object = dataframe['object'].to_numpy()
         y_positive = dataframe['is_positive'].to_numpy()
+        self.__fitted = True
 
         self.classifier.fit(X, y_relevant, y_object, y_positive)
 
@@ -78,7 +101,11 @@ class Model(BaseEstimator):
         self.transformer.dump(folder)
         self.classifier.dump(folder)
 
+    def __sklearn_is_fitted__(self) -> bool:
+        return self.__fitted
+
     def load(self, folder: str = 'models') -> BaseEstimator:
         self.transformer.load(folder)
         self.classifier.load(folder)
+        self.__fitted = True
         return self
