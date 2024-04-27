@@ -85,6 +85,7 @@ traitlets==5.14.3
 typing_extensions==4.11.0
 tzdata==2024.1
 wcwidth==0.2.13
+wordcloud==1.9.3
 Werkzeug==3.0.2
 WTForms==3.1.2
 yargy==0.16.0
