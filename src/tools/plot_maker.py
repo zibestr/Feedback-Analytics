@@ -27,9 +27,9 @@ def lesson_stats(lesson_name: str, dataframe: pd.DataFrame) -> str:
                'object': ['Вебинар', 'Программа', 'Преподаватель']}
     output_data = dataframe[list(columns.keys()) + ['question_1']].copy()
 
-    fig = Figure()
+    fig = Figure(figsize=(20, 5))
     FigureCanvas(fig)
-    axes = fig.add_subplot(ncols=len(columns), figsize=(20, 5))
+    axes = fig.subplots(ncols=len(columns))
 
     for column in columns.keys():
         output_data.loc[output_data['question_1'] == lesson_name,
