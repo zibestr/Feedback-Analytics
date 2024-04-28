@@ -26,10 +26,10 @@
                                 <ul>
                                     <li><a href="#">Последние отзывы</a></li>
                                     <li class="dropdown">
-                                        <a href="#">Classes <span class="arrow">&uarr;</span></a>
+                                        <a href="#">Курсы</a>
                                         <ul class="dropdown-menu">
                                             {% for course in courses %}
-                                                <li><a href="#">{{ course.name }}</a></li>
+                                                <li><a href="{{ url_for('course', id=current_user.id, course=course.id) }}">{{ course.name }}</a></li>
                                             {% endfor %}
                                         </ul>
                                     </li>
