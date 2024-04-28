@@ -109,8 +109,8 @@ class Model(BaseEstimator):
         return self.__fitted
 
     def load(self, folder: str = 'models') -> BaseEstimator:
-        if getcwd().split('/')[-1] == 'src':
-            folder = '../' + folder
+        # if getcwd().split('/')[-1] == 'src':
+        folder = '../' + folder
 
         self.transformer.load(folder)
         self.classifier.load(folder)

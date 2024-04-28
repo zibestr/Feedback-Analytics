@@ -17,8 +17,8 @@ class TextNormalizer(BaseEstimator, TransformerMixin):
     __fitted: bool = False
 
     def __init__(self, stopwords_filename: str) -> None:
-        if getcwd().split('/')[-1] == 'src':
-            stopwords_filename = '../' + stopwords_filename
+        # if getcwd().split('/')[-1] == 'src':
+        stopwords_filename = '../' + stopwords_filename
 
         self.stopwords_filename = stopwords_filename
 

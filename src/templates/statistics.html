@@ -2,7 +2,12 @@
 
 {% block content %}
     <div class="container_login">
-        <h1>Отзывы</h1>
+        {% if current_course %}
+            <h1>Отзывы на {{ current_course }} </h1>
+        {% else %}
+            <h1>Отзывы</h1>
+        {% endif %}
+
         {{ diagram | safe }}
     </div>
 
