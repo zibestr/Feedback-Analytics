@@ -41,10 +41,10 @@ class ID(StatesGroup):
 class Form(StatesGroup):
     removeID = State()
     WebID = State()
-    question2 = State()
-    question3 = State()
-    question4 = State()
-    question5 = State()
+    question_2 = State()
+    question_3 = State()
+    question_4 = State()
+    question_5 = State()
 
 
 
@@ -59,15 +59,15 @@ class CourceCallback(CallbackData, prefix="cource"):
 
 async def setUserIDInDB(message: types.Message, state: FSMContext):
     data = await state.get_data()
-    ID = int(data["ID"])
     try:
+        ID = int(data["ID"])
         student = Student(system_id=ID, course_id=1)
         session.add_all([student])
         session.commit()
         await message.answer("ID {} пользователя получен и занесён в базу данных. При желании написать отзыв нажмите команду \n /feedback".format(ID))
     except Exception as e:
-        t = state.get_data
-        if "(sqlite3.IntegrityError) UNIQUE constraint failed" in str(e) and "ID" in t and t["ID"]>0:
+        t = await state.get_data()
+        if "(sqlite3.IntegrityError) UNIQUE constraint failed" in str(e) and "ID" in t and int(t["ID"])>0:
             await message.answer("Такой ID уже используется, просто наберите \n /feedback")
         else:
             print("FFFFFFFFFFFFFFFFFFFF")
@@ -153,7 +153,7 @@ async def Question1(call : CallbackQuery, callback_data: CourceCallback, state: 
         r = await call.message.answer("Выбран вебинар {} \n  Что вам больше всего понравилось в теме вебинара и почему?".format(textFromDb[callback_data.data-1].name))
         await state.update_data(RemoveMessage=r.message_id)
     await state.update_data(WebID=callback_data.data)
-    await state.set_state(Form.question2)
+    await state.set_state(Form.question_2)
     await call.answer()
 
 
@@ -165,21 +165,21 @@ async def echo(message: Message,  state: FSMContext) -> None:
     if st==ID.ID:
         await state.update_data(ID=message.text)
         await setUserIDInDB(message, state)
-    elif st==Form.question2:
+    elif st==Form.question_2:
         await message.answer("Были ли моменты в вебинаре, которые вызвали затруднения в понимании материала? Можете описать их?")
-        await state.update_data(question2=message.text)
-        await state.set_state(Form.question3)
-    elif st==Form.question3:
+        await state.update_data(question_2=message.text)
+        await state.set_state(Form.question_3)
+    elif st==Form.question_3:
         await message.answer("Какие аспекты вебинара, по вашему мнению, нуждаются в улучшении и какие конкретные изменения вы бы предложили?")
-        await state.update_data(question3=message.text)
-        await state.set_state(Form.question4)
-    elif st==Form.question4:
+        await state.update_data(question_3=message.text)
+        await state.set_state(Form.question_4)
+    elif st==Form.question_4:
         await message.answer("Есть ли темы или вопросы, которые вы бы хотели изучить более подробно в следующих занятиях?")
-        await state.update_data(question4=message.text)
-        await state.set_state(Form.question5)
-    elif st==Form.question5:
+        await state.update_data(question_4=message.text)
+        await state.set_state(Form.question_5)
+    elif st==Form.question_5:
         await message.answer("Спасибо за отзыв, мы обязательно его учтём. Если хотите оставить ещё отзыв наберите команду \n /feedback")
-        await state.update_data(question5=message.text)
+        await state.update_data(question_5=message.text)
         await putInDb(message, state)
     else:
         await message.answer("Произошла ошибка. Попробуйте позже")
@@ -187,15 +187,15 @@ async def echo(message: Message,  state: FSMContext) -> None:
 
 async def putInDb(message: Message, state: FSMContext) -> None:
     data = await state.get_data()
-    ID = data["ID"]
-    await state.clear()
-    await state.update_data(ID=ID)
-    del data["RemoveMessage"]
-    res = {}
-    for i in data:
-        res[i] = data[i]
-    w = str(res) # Сериализованная строка словаря для того, чтобы unique работал
     try:
+        ID = data["ID"]
+        await state.clear()
+        await state.update_data(ID=ID)
+        del data["RemoveMessage"]
+        res = {}
+        for i in data:
+            res[i] = data[i]
+        w = str(res) # Сериализованная строка словаря для того, чтобы unique работал
         statement = select(Student).filter_by(system_id=ID, course_id=1)
         user_obj = session.scalars(statement).all()
         student_id = user_obj[0].id
@@ -206,6 +206,8 @@ async def putInDb(message: Message, state: FSMContext) -> None:
         if "UNIQUE constraint failed" in str(e):
             await message.answer("Отзыв заполняется не первый раз. Все результаты были получены. Вы можете написать отзыв на другой вебинар командой \n /feedback")
             session.rollback()
+        else:
+            await message.answer("Произошла ошибка. Повторите позже")
         print(e)
 
 
