@@ -15,6 +15,7 @@ header a {
 
 main {
     padding: 20px;
+    height: 65vh;
     text-align: center;
 }
 
@@ -57,7 +58,7 @@ h1 {
     display: flex;
     justify-content: center;
     align-items: center;
-    position: absolute;
+    position: fixed;
     bottom: 0;
     width: 100%;
 }

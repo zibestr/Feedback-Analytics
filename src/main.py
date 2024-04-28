@@ -5,6 +5,7 @@ from tools.forms import LoginForm
 from tools.password_proccessing import hash_password, check_password
 from tools.plot_maker import lesson_stats, pie_plot, keywords_wordcloud
 from getDataFromDb import getData
+import json
 import os
 
 from db_models.courses import Course
@@ -41,7 +42,6 @@ def me(id):
     df = getData()
     # pie_plot_diagram = pie_plot(df)
     keywords_wordcloud_diagram = keywords_wordcloud(df)
-    print("generated")
 
     return render_template("statistics.html", user_type=int(current_user.type), courses=courses, diagram=keywords_wordcloud_diagram)
 
@@ -50,7 +50,13 @@ def me(id):
 @login_required
 def course(id, course: Course):
     courses = session.query(Course).all()
-    return render_template("statistics.html", user_type=int(current_user.type), courses=courses)
+    current_course = session.query(Course).filter(Course.id == course).first().name
+    df = getData()
+    if len(df) != 0:
+        return render_template("statistics.html", user_type=int(current_user.type), courses=courses, current_course=current_course, diagram="Nothing to show...")
+    
+    keywords_wordcloud_diagram = keywords_wordcloud(df.loc[df["question_1"] == current_course])
+    return render_template("statistics.html", user_type=int(current_user.type), courses=courses, current_course=current_course, diagram=keywords_wordcloud_diagram)
 
 
 @login_manager.user_loader
