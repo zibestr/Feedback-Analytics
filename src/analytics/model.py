@@ -1,4 +1,5 @@
 from pickle import dump, load
+from os import getcwd
 
 import numpy as np
 import pandas as pd
@@ -60,7 +61,6 @@ class MultiLabelsClassifier(BaseEstimator):
             dump(self.positive_model, binfile)
 
     def load(self, folder: str = 'models') -> BaseEstimator:
-        folder = "../" + folder
         self.__fitted = True
         with open(f'{folder}/relevant.pkl', 'rb') as binfile:
             self.relevant_model = load(binfile)
@@ -99,6 +99,9 @@ class Model(BaseEstimator):
         return self.classifier.predict(X)
 
     def dump(self, folder: str = 'models') -> None:
+        if getcwd().split('/')[-1] == 'src':
+            folder = '../' + folder
+
         self.transformer.dump(folder)
         self.classifier.dump(folder)
 
@@ -106,6 +109,9 @@ class Model(BaseEstimator):
         return self.__fitted
 
     def load(self, folder: str = 'models') -> BaseEstimator:
+        if getcwd().split('/')[-1] == 'src':
+            folder = '../' + folder
+
         self.transformer.load(folder)
         self.classifier.load(folder)
         self.__fitted = True

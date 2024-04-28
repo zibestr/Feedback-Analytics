@@ -8,6 +8,7 @@ from natasha import (
     NewsMorphTagger,
     NewsEmbedding
 )
+from os import getcwd
 
 punctuation = r"""!"#$%&'()*+,./:;<=>?@[\]^_`{|}~«»"""
 
@@ -16,7 +17,9 @@ class TextNormalizer(BaseEstimator, TransformerMixin):
     __fitted: bool = False
 
     def __init__(self, stopwords_filename: str) -> None:
-        stopwords_filename = '../' + stopwords_filename
+        if getcwd().split('/')[-1] == 'src':
+            stopwords_filename = '../' + stopwords_filename
+
         self.stopwords_filename = stopwords_filename
 
         with open(stopwords_filename, 'r') as file:
