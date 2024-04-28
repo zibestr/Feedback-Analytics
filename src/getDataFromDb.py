@@ -9,7 +9,6 @@ import pandas
 
 
 def getData():
-    os.chdir(os.path.abspath("src/"))
     db_session.global_init(os.path.abspath('db/database.sqlite3'))
     session = db_session.create_session()
 
@@ -18,6 +17,7 @@ def getData():
 
     res = []
     for i in user_obj:
+        i.answers = i.answers.replace("\"", '\\"')
         i.answers = i.answers.replace("'", '"')
         data = json.loads(i.answers)
         t = []
@@ -26,10 +26,10 @@ def getData():
         course = course[0]
 
         t.append(course.name)
-        t.append(data["question2"])
-        t.append(data["question3"])
-        t.append(data["question4"])
-        t.append(data["question5"])
+        t.append(data["question_2"])
+        t.append(data["question_3"])
+        t.append(data["question_4"])
+        t.append(data["question_5"])
         res.append(t)
     data = {'question_1':[], 'question_2':[], 'question_3':[], 'question_4':[], 'question_5':[]}
 
