@@ -165,19 +165,19 @@ async def echo(message: Message,  state: FSMContext) -> None:
     if st==ID.ID:
         await state.update_data(ID=message.text)
         await setUserIDInDB(message, state)
-    elif st==Form.question2:
+    elif st==Form.question_2:
         await message.answer("Были ли моменты в вебинаре, которые вызвали затруднения в понимании материала? Можете описать их?")
         await state.update_data(question_2=message.text)
         await state.set_state(Form.question_3)
-    elif st==Form.question3:
+    elif st==Form.question_3:
         await message.answer("Какие аспекты вебинара, по вашему мнению, нуждаются в улучшении и какие конкретные изменения вы бы предложили?")
         await state.update_data(question_3=message.text)
         await state.set_state(Form.question_4)
-    elif st==Form.question4:
+    elif st==Form.question_4:
         await message.answer("Есть ли темы или вопросы, которые вы бы хотели изучить более подробно в следующих занятиях?")
         await state.update_data(question_4=message.text)
         await state.set_state(Form.question_5)
-    elif st==Form.question5:
+    elif st==Form.question_5:
         await message.answer("Спасибо за отзыв, мы обязательно его учтём. Если хотите оставить ещё отзыв наберите команду \n /feedback")
         await state.update_data(question_5=message.text)
         await putInDb(message, state)
