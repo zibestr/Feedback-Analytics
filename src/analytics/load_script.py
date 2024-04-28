@@ -46,6 +46,7 @@ def load_classifier(folder: str = 'models') -> Model:
 
 
 def load_topic_model(folder: str = 'models') -> KeywordExtractor:
+    folder = "../" + folder
     topic_model = KeywordExtractor(model_n_components=125,
                                    model_max_iter=200,
                                    n_topics=1)

@@ -16,6 +16,7 @@ class TextNormalizer(BaseEstimator, TransformerMixin):
     __fitted: bool = False
 
     def __init__(self, stopwords_filename: str) -> None:
+        stopwords_filename = '../' + stopwords_filename
         self.stopwords_filename = stopwords_filename
 
         with open(stopwords_filename, 'r') as file:

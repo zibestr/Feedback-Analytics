@@ -6,13 +6,14 @@ from tools.password_proccessing import hash_password, check_password
 from tools.plot_maker import lesson_stats, pie_plot, keywords_wordcloud
 from getDataFromDb import getData
 from sqlalchemy import select
+import pandas as pd
+import os
 
 from db_models.courses import Course
 from db_models.feedbacks import Feedback
 from db_models.students import Student
 from db_models.users import User
 from db_models import db_session
-import os
 
 app = Flask(__name__)
 login_manager = LoginManager(app)
@@ -39,10 +40,11 @@ def homepage():
 @login_required
 def me(id):
     courses = session.query(Course).all()
-    query = select(Feedback).order_by(Feedback.id.desc())
-    feedbacks = session.scalars(query).fetchmany(100)
+    df = getData()
+    # pie_plot_diagram = pie_plot(df)
+    keywords_wordcloud_diagram = keywords_wordcloud(df)
 
-    return render_template("statistics.html", user_type=int(current_user.type), courses=courses)
+    return render_template("statistics.html", user_type=int(current_user.type), courses=courses, test=keywords_wordcloud_diagram)
 
 
 @app.route("/me?<id>&<course>", methods=["GET", "POST"])
