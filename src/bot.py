@@ -41,10 +41,10 @@ class ID(StatesGroup):
 class Form(StatesGroup):
     removeID = State()
     WebID = State()
-    question2 = State()
-    question3 = State()
-    question4 = State()
-    question5 = State()
+    question_2 = State()
+    question_3 = State()
+    question_4 = State()
+    question_5 = State()
 
 
 
