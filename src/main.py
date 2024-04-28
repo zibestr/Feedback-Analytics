@@ -5,8 +5,6 @@ from tools.forms import LoginForm
 from tools.password_proccessing import hash_password, check_password
 from tools.plot_maker import lesson_stats, pie_plot, keywords_wordcloud
 from getDataFromDb import getData
-from sqlalchemy import select
-import pandas as pd
 import os
 
 from db_models.courses import Course
@@ -43,13 +41,15 @@ def me(id):
     df = getData()
     # pie_plot_diagram = pie_plot(df)
     keywords_wordcloud_diagram = keywords_wordcloud(df)
+    print("generated")
 
-    return render_template("statistics.html", user_type=int(current_user.type), courses=courses, test=keywords_wordcloud_diagram)
+    return render_template("statistics.html", user_type=int(current_user.type), courses=courses, diagram=keywords_wordcloud_diagram)
 
 
 @app.route("/me?<id>&<course>", methods=["GET", "POST"])
 @login_required
 def course(id, course: Course):
+    courses = session.query(Course).all()
     return render_template("statistics.html", user_type=int(current_user.type), courses=courses)
 
 
@@ -70,4 +70,4 @@ if __name__ == '__main__':
     os.chdir(os.path.abspath("src/"))
     db_session.global_init(os.path.abspath('db/database.sqlite3'))
     session = db_session.create_session()
-    app.run(port=8080, host='0.0.0.0')
+    app.run(port=8080, host='0.0.0.0', debug=False)
