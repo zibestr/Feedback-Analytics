@@ -153,7 +153,7 @@ async def Question1(call : CallbackQuery, callback_data: CourceCallback, state: 
         r = await call.message.answer("Выбран вебинар {} \n  Что вам больше всего понравилось в теме вебинара и почему?".format(textFromDb[callback_data.data-1].name))
         await state.update_data(RemoveMessage=r.message_id)
     await state.update_data(WebID=callback_data.data)
-    await state.set_state(Form.question2)
+    await state.set_state(Form.question_2)
     await call.answer()
 
 
@@ -167,19 +167,19 @@ async def echo(message: Message,  state: FSMContext) -> None:
         await setUserIDInDB(message, state)
     elif st==Form.question2:
         await message.answer("Были ли моменты в вебинаре, которые вызвали затруднения в понимании материала? Можете описать их?")
-        await state.update_data(question2=message.text)
-        await state.set_state(Form.question3)
+        await state.update_data(question_2=message.text)
+        await state.set_state(Form.question_3)
     elif st==Form.question3:
         await message.answer("Какие аспекты вебинара, по вашему мнению, нуждаются в улучшении и какие конкретные изменения вы бы предложили?")
-        await state.update_data(question3=message.text)
-        await state.set_state(Form.question4)
+        await state.update_data(question_3=message.text)
+        await state.set_state(Form.question_4)
     elif st==Form.question4:
         await message.answer("Есть ли темы или вопросы, которые вы бы хотели изучить более подробно в следующих занятиях?")
-        await state.update_data(question4=message.text)
-        await state.set_state(Form.question5)
+        await state.update_data(question_4=message.text)
+        await state.set_state(Form.question_5)
     elif st==Form.question5:
         await message.answer("Спасибо за отзыв, мы обязательно его учтём. Если хотите оставить ещё отзыв наберите команду \n /feedback")
-        await state.update_data(question5=message.text)
+        await state.update_data(question_5=message.text)
         await putInDb(message, state)
     else:
         await message.answer("Произошла ошибка. Попробуйте позже")
