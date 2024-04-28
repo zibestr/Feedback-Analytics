@@ -1,11 +1,10 @@
-from flask import Flask, request, render_template, flash, url_for, send_file, session
-from flask_login import LoginManager, UserMixin, login_required, current_user, login_user, logout_user
-from werkzeug.utils import secure_filename, redirect
+from flask import Flask, request, render_template, flash, url_for, session
+from flask_login import LoginManager, login_required, current_user, login_user, logout_user
+from werkzeug.utils import redirect
 from tools.forms import LoginForm
-from tools.password_proccessing import hash_password, check_password
-from tools.plot_maker import lesson_stats, pie_plot, keywords_wordcloud
+from tools.password_proccessing import check_password
+from tools.plot_maker import pie_plot, keywords_wordcloud
 from getDataFromDb import getData
-import json
 import os
 
 from db_models.courses import Course
@@ -39,9 +38,9 @@ def homepage():
 @login_required
 def me(id):
     courses = session.query(Course).all()
-    df = getData()
+    df = getData(session)
     # pie_plot_diagram = pie_plot(df)
-    keywords_wordcloud_diagram = keywords_wordcloud(df)
+    keywords_wordcloud_diagram = keywords_wordcloud(df) + pie_plot(df)
 
     return render_template("statistics.html", user_type=int(current_user.type), courses=courses, diagram=keywords_wordcloud_diagram)
 
@@ -51,11 +50,11 @@ def me(id):
 def course(id, course: Course):
     courses = session.query(Course).all()
     current_course = session.query(Course).filter(Course.id == course).first().name
-    df = getData()
+    df = getData(session)
     if len(df) != 0:
         return render_template("statistics.html", user_type=int(current_user.type), courses=courses, current_course=current_course, diagram="Nothing to show...")
     
-    keywords_wordcloud_diagram = keywords_wordcloud(df.loc[df["question_1"] == current_course])
+    keywords_wordcloud_diagram = keywords_wordcloud(df.loc[df["question_1"] == current_course]) + pie_plot(df.loc[df["question_1"] == current_course])
     return render_template("statistics.html", user_type=int(current_user.type), courses=courses, current_course=current_course, diagram=keywords_wordcloud_diagram)
 
 

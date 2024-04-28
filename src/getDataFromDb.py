@@ -8,17 +8,20 @@ from db_models.feedbacks import Feedback
 import pandas
 
 
-def getData():
-    db_session.global_init(os.path.abspath('db/database.sqlite3'))
-    session = db_session.create_session()
+def getData(session):
+    """db_session.global_init(os.path.abspath('db/database.sqlite3'))
+    session = db_session.create_session()"""
 
     statement = select(Feedback).order_by(Feedback.id.desc())
     user_obj = session.scalars(statement).fetchmany(100)
 
     res = []
     for i in user_obj:
-        i.answers = i.answers.replace("\"", '\\"')
+        print(i.answers)
+        i.answers
+        i.answers = i.answers.replace("\"", '')
         i.answers = i.answers.replace("'", '"')
+        print(i.answers)
         data = json.loads(i.answers)
         t = []
         statement = select(Course).filter(Course.id == data["WebID"])
