@@ -69,7 +69,7 @@ class TransformPipeline(BaseEstimator, TransformerMixin):
             dump(self.transformer[1], binfile)
 
     def load(self, folder: str = 'models', num: int = 1) -> BaseEstimator:
-        with open(f'{folder}/pipeline{num}.pkl', 'rb') as binfile:
+        with open(f'../{folder}/pipeline{num}.pkl', 'rb') as binfile:
             self.transformer = Pipeline(steps=[
                 ('normalize', TextNormalizer('data/stopwords.txt').fit()),
                 ('vectorizer', load(binfile))

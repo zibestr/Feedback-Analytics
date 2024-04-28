@@ -17,10 +17,38 @@
 ## Установка и запуск проекта
 
 ### Windows
-Саня где?
+Для запуска проекта нужно склонировать репозиторий:
+```shell
+git clone https://github.com/zibestr/Feedback-Analytics.git
+```
+Далее нужен запуск script.bat, который установит модели, установит инсталятор питона для вариативности установки, установит venv и активирует его.
+Запуск сайта производится командой:
+```shell
+python ./src/main.py
+```
+Запуск бота производится командой:
+```shell
+python ./src/bot.py
+```
 
 ### Linux & MacOs
-Sanya where?
+
+Для запуска проекта нужно склонировать репозиторий:
+```shell
+git clone https://github.com/zibestr/Feedback-Analytics.git
+```
+Затем нужно запустить скрипт launch/script.sh:
+```shell
+source ./launch/script.sh
+```
+Запуск сайта производится командой:
+```shell
+python3 ./src/main.py
+```
+Запуск бота производится командой:
+```shell
+python3 ./src/bot.py
+```
 
 ### Запуск проекта в контейнере
 

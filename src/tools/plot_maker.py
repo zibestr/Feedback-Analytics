@@ -52,7 +52,7 @@ def lesson_stats(lesson_name: str, dataframe: pd.DataFrame) -> str:
     buf = BytesIO()
     plt.savefig(buf, format="png")
     data = base64.b64encode(buf.getbuffer()).decode("ascii")
-    return f"<img src='data:image/png;base64,{data}'/>"
+    return f"<img src='data:image/png;base64,{data}' class='background'/>"
 
 
 def pie_plot(df: pd.DataFrame) -> str:

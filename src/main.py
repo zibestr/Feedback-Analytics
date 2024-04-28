@@ -5,13 +5,15 @@ from tools.forms import LoginForm
 from tools.password_proccessing import hash_password, check_password
 from tools.plot_maker import lesson_stats, pie_plot, keywords_wordcloud
 from getDataFromDb import getData
+from sqlalchemy import select
+import pandas as pd
+import os
 
 from db_models.courses import Course
 from db_models.feedbacks import Feedback
 from db_models.students import Student
 from db_models.users import User
 from db_models import db_session
-import os
 
 app = Flask(__name__)
 login_manager = LoginManager(app)
@@ -38,14 +40,22 @@ def homepage():
 @login_required
 def me(id):
     courses = session.query(Course).all()
-    data_by_courses: dict
+    df = getData()
+    # pie_plot_diagram = pie_plot(df)
+    keywords_wordcloud_diagram = keywords_wordcloud(df)
+
+    return render_template("statistics.html", user_type=int(current_user.type), courses=courses, test=keywords_wordcloud_diagram)
+
+
+@app.route("/me?<id>&<course>", methods=["GET", "POST"])
+@login_required
+def course(id, course: Course):
     return render_template("statistics.html", user_type=int(current_user.type), courses=courses)
 
 
 @login_manager.user_loader
 def load_user(id):
-    return session.query(User).get(id)
-"""session.query(User).filter(User.id == id).first()"""
+    return session.query(User).get(id)  # session.query(User).filter(User.id == id).first()
 
 
 @app.route('/logout')

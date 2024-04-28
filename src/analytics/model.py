@@ -61,6 +61,7 @@ class MultiLabelsClassifier(BaseEstimator):
             dump(self.positive_model, binfile)
 
     def load(self, folder: str = 'models') -> BaseEstimator:
+        folder = "../" + folder
         self.__fitted = True
         with open(f'{folder}/relevant.pkl', 'rb') as binfile:
             self.relevant_model = load(binfile)
