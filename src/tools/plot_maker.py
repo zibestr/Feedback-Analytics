@@ -7,9 +7,14 @@ import seaborn as sns
 from wordcloud import WordCloud
 
 from analytics.load_script import load_topic_model
+from tools.predict_script import predict_classes
 
 
 def lesson_stats(lesson_name: str, dataframe: pd.DataFrame) -> str:
+    predicted = predict_classes(dataframe)
+    dataframe['is_relevant'] = predicted[:, 0]
+    dataframe['object'] = predicted[:, 1]
+    dataframe['is_positive'] = predicted[:, 2]
     titles = {
         'is_relevant': 'Релевантность отзывов',
         'object': 'О чем отзывы',

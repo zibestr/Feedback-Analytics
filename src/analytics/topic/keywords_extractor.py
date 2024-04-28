@@ -5,6 +5,7 @@ from analytics.pipeline import TransformPipeline
 import numpy as np
 import pandas as pd
 from pickle import dump, load
+from os import getcwd
 
 
 class KeywordExtractor(Pipeline):
@@ -92,12 +93,19 @@ class KeywordExtractor(Pipeline):
         raise NotImplementedError('Not usage.')
 
     def dump(self, folder: str = 'models') -> None:
-        self._preprocessor.dump(num=2)
+        if getcwd().split('/')[-1] == 'src':
+            folder = '../' + folder
+
+        self._preprocessor.dump(folder=folder, num=2)
         with open(f'{folder}/topic_model.pkl', 'wb') as binfile:
             dump(self._topic_model, binfile)
 
     def load(self, folder: str = 'models') -> BaseEstimator:
-        self._preprocessor = self._preprocessor.load(num=2)
+        if getcwd().split('/')[-1] == 'src':
+            folder = '../' + folder
+
+        self._preprocessor = self._preprocessor.load(folder=folder,
+                                                     num=2)
         self._vectorizer = self._preprocessor.transformer[1]
         self.steps[0] = ('preprocess', self._preprocessor)
         with open(f'{folder}/topic_model.pkl', 'rb') as binfile:
